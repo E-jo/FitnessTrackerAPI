@@ -1,0 +1,8 @@
+type: framework
+content:
+  - Basic API
+  - Developer registration
+  - Application registration
+  - API-key authentication
+  - Rate limits
+current_task: 4

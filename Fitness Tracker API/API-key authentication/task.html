@@ -1,0 +1,43 @@
+<div class="step-text">
+<h5 id="description">Description</h5><p>Once everything is set up, developers can register their applications and receive API keys. With these keys, you can finally protect your tracker API using API key authentication.</p><p>The authentication process goes like this:</p><p>When an application sends a request to the <code class="language-json">POST /api/tracker</code> or <code class="language-json">GET /api/tracker</code> endpoint, it needs to include the <code class="language-json">X-API-Key</code> header in the request. This header should contain the application's unique API key. If the supplied API key is valid, the application becomes authenticated. However, if the necessary header is missing or fails to contain a valid API key, the authentication gets rejected, and the <code class="language-json">401 UNAUTHENTICATED</code> status code is returned.</p><p>You might want to build a custom security filter and add it to the existing security filter chain to secure this API protection method.</p><p>Besides, you'll want to track which application is uploading data to your service. This can be achieved by storing the name of the publisher application in each fitness data record.</p><p>The basic HTTP authentication for developers should continue to function as before. Any unauthenticated access to the <code class="language-json">POST /api/tracker</code> and <code class="language-json">GET /api/tracker</code> endpoints should be blocked. </p><h5 id="objectives">Objectives</h5><ul><li><p>Enable API key authentication for the <code class="language-json">POST /api/tracker</code> or <code class="language-json">GET /api/tracker</code> endpoints.</p></li><li><p>Now, the <code class="language-json">POST /api/tracker</code> endpoint should be available only to authenticated applications. An application becomes authenticated by providing a valid API key in the <code class="language-json">X-API-Key</code> header. In addition to the fields provided in the request body, include the publisher application name in each record.</p></li><li><p>Similarly, the <code class="language-json">GET /api/tracker</code> endpoint should only be available to authenticated applications. An application becomes authenticated by providing a valid API key in the <code class="language-json">X-API-Key</code> header. Fitness data records now need to contain the names of the applications that published them:</p><pre><code class="language-json">[
+  {
+    "id": &lt;id&gt;,
+    "username": &lt;string&gt;,
+    "activity": &lt;string&gt;,
+    "duration": &lt;integer&gt;,
+    "calories": &lt;integer&gt;,
+    "application": &lt;string&gt;
+  },
+  {
+    "id": &lt;id&gt;,
+    "username": &lt;string&gt;,
+    "activity": &lt;string&gt;,
+    "duration": &lt;integer&gt;,
+    "calories": &lt;integer&gt;,
+    "application": &lt;string&gt;
+  },
+  ...
+]</code></pre></li><li><p>Continue to support basic HTTP authentication for the <code class="language-json">GET /api/developers/&lt;id&gt;</code> and <code class="language-json">POST /api/applications/register</code> endpoints.</p></li></ul><h5 id="examples">Examples</h5><p><strong>Example 1.</strong> <em>POST request to the /api/developers/signup endpoint</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "email": "johndoe@gmail.com",
+  "password": "qwerty"
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><em>Response header</em>:</p><pre><code class="language-no-highlight">Location: /api/developers/9062</code></pre><p><strong>Example 2.</strong> <em>POST request to the /api/applications/register endpoint with login=johndoe@gmail.com and password=qwerty</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "name": "Fitness App",
+  "description": "demo application"
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><em>Response body</em>:</p><pre><code class="language-json">{
+  "name": "Fitness App",
+  "apikey": "21da3cc8020517ecaf2e0781b9f679c56fe0f119"
+}</code></pre><p><strong>Example 3.</strong> <em>POST request to the /api/tracker endpoint with X-API-Key=21da3cc8020517ecaf2e0781b9f679c56fe0f119</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "username": "user-12",
+  "activity": "swimming",
+  "duration": 950,
+  "calories": 320
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><strong>Example 4.</strong> <em>GET request to the /api/tracker endpoint with X-API-Key=21da3cc8020517ecaf2e0781b9f679c56fe0f119</em>:</p><p><em>Response code</em>: <code class="language-json">200 OK</code></p><p><em>Response body</em>:</p><pre><code class="language-json">[
+  {
+    "username": "user-12",
+    "activity": "swimming",
+    "duration": 950,
+    "calories": 320,
+    "application": "Fitness App"
+  }
+]</code></pre><p><strong>Example 5.</strong> <em>GET request to the /api/tracker endpoint with X-API-Key=abc</em>:</p><p><em>Response code</em>: <code class="language-json">401 UNAUTHENTICATED</code></p>
+</div>

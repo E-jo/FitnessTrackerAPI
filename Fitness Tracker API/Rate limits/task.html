@@ -1,0 +1,45 @@
+<div class="step-text">
+<h5 id="description">Description</h5><p>It's time to think about adding different categories of applications. In this project, you'll work with two of them, <strong>basic</strong> and <strong>premium</strong>. Whenever a developer registers an application, they get to choose its category. This requires us to update both the application registration request body and the application entity as needed.</p><p>Moreover, we're going to set some limits on the number of requests a basic application can make per second. In our case, this rate will be <strong>1 request per second</strong> or <em>r</em> = 1. Premium applications won't have such restrictions.</p><p>Request rate limiting can be applied using a token bucket. Here is the basic form of this algorithm:</p><ul><li><p>Create an appropriate data structure for storing token buckets for clients.</p></li><li><p>Each bucket can hold a maximum of 1 token and a minimum of 0 tokens.</p></li><li><p>Whenever a client makes a request, verify whether the client has a personal token bucket in the data structure.</p></li><li><p>If not, create a token bucket for the client and fill it with the initial number of tokens, which in our case will be 1.</p></li><li><p>Check whether the token bucket contains more than 0 tokens. If so, remove a token and grant the request.</p></li><li><p>If the number of available tokens in the bucket is 0, deny the request with the response code <code class="language-json">429 TOO MANY REQUESTS</code>.</p></li><li><p>Add 1 token to each bucket every 1 / <em>r</em> seconds. In our case, this operation occurs once per second. If a bucket already contains the maximum allowed number of tokens, then disregard the new token.</p></li></ul><p>This rate limit should apply to both the <code class="language-json">GET /api/tracker</code> and <code class="language-json">POST /api/tracker</code> endpoints.</p><h5 id="objectives">Objectives</h5><ul><li><p>Modify the <code class="language-json">POST /api/applications/register</code> endpoint to accept this request body:</p><pre><code class="language-json">{
+  "name": &lt;string, not null, not blank, unique&gt;,
+  "description": &lt;string, not null&gt;,
+  "category": &lt;string, either "basic" or "premium"&gt;
+}</code></pre><p>In the case of a successful registration, this endpoint should reply with the status code <code class="language-json">201 CREATED</code> and this response body:</p><pre><code class="language-json">{
+  "name": &lt;string&gt;,
+  "apikey": &lt;string, not null, not blank, unique&gt;,
+  "category": &lt;string&gt;
+}</code></pre></li><li><p>Adapt the <code class="language-json">GET /api/developers/&lt;id&gt;</code> endpoint; the list of applications should now include the <code class="language-json">category</code> field:</p><pre><code class="language-json">{
+  "id": &lt;id&gt;,
+  "email": &lt;string&gt;,
+  "applications": [
+    {
+      "id": &lt;id&gt;,
+      "name": &lt;string&gt;,
+      "description": &lt;string&gt;,
+      "apikey": &lt;string&gt;,
+      "category": &lt;string&gt;
+    },
+    ...
+  ]
+}</code></pre></li><li><p>Set a rate limit of 1 request per second for all basic application requests to the <code class="language-json">GET /api/tracker</code> and <code class="language-json">POST /api/tracker</code> endpoints. If an application exceeds the allowed number of requests, the endpoints should respond with the code <code class="language-json">429 TOO MANY REQUESTS</code>. This rate limit applies universally to both endpoints, not individually for each one.</p></li></ul><h5 id="examples">Examples</h5><p><strong>Example 1.</strong> <em>POST request to the /api/developers/signup endpoint</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "email": "johndoe@gmail.com",
+  "password": "qwerty"
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><em>Response header</em>:</p><pre><code class="language-no-highlight">Location: /api/developers/9062</code></pre><p><strong>Example 2.</strong> <em>POST request to the /api/applications/register endpoint with login=johndoe@gmail.com and password=qwerty</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "name": "Fitness App",
+  "description": "demo application",
+  "category": "basic"
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><em>Response body</em>:</p><pre><code class="language-json">{
+  "name": "Fitness App",
+  "apikey": "21da3cc8020517ecaf2e0781b9f679c56fe0f119",
+  "category": "basic"
+}</code></pre><p><strong>Example 3.</strong> <em>POST request to the /api/tracker endpoint with X-API-Key=21da3cc8020517ecaf2e0781b9f679c56fe0f119</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "username": "user-12",
+  "activity": "swimming",
+  "duration": 950,
+  "calories": 320
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><strong>Example 4.</strong> <em>The immediate GET request to the /api/tracker endpoint with X-API-Key=21da3cc8020517ecaf2e0781b9f679c56fe0f119</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "username": "user-12",
+  "activity": "running",
+  "duration": 50,
+  "calories": 20
+}</code></pre><p><em>Response code</em>: <code class="language-json">429 TOO MANY REQUESTS</code></p>
+</div>

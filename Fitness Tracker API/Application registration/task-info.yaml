@@ -1,0 +1,86 @@
+type: edu
+files:
+  - name: src/fitnesstracker/FitnessTrackerApplication.java
+    visible: true
+    learner_created: false
+  - name: src/resources/application.properties
+    visible: true
+    learner_created: false
+  - name: build.gradle
+    visible: true
+    learner_created: false
+  - name: test/AppProfile.java
+    visible: false
+    learner_created: false
+  - name: test/DataRecord.java
+    visible: false
+    learner_created: false
+  - name: test/DevProfile.java
+    visible: false
+    learner_created: false
+  - name: test/FitnessTrackerTest.java
+    visible: false
+    learner_created: false
+  - name: src/fitnesstracker/services/ApplicationService.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/controllers/ErrorHandlingController.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/UserDetailsAdapter.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/repositories/FitnessLogRepository.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/FitnessLog.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/config/SecurityConfig.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/controllers/FitnessLogController.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/Violation.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/Application.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/repositories/ApplicationRepository.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/InvalidArgumentErrorResponse.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/services/UserService.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/config/GsonConfig.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/services/FitnessLogService.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/DeveloperProfile.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/repositories/UserRepository.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/User.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/ApplicationSubmission.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/SubmissionResponse.java
+    visible: true
+    learner_created: true
+feedback_link: https://hyperskill.org/learn/step/38671#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Fri, 21 Feb 2025 18:48:26 UTC"
+record: 3

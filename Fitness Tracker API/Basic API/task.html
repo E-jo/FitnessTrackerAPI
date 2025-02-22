@@ -1,0 +1,56 @@
+<div class="step-text">
+<h5 id="description">Description</h5><p>This project's heart is the API that enables the upload and download of fitness tracker data. For this aim, you need to establish two endpoints - <code class="language-json">POST /api/tracker</code> and <code class="language-json">GET /api/tracker</code>.</p><p><code class="language-json">POST /api/tracker</code> should be made to accept data in JSON format. The request body must carry the username of the data uploader, the name of a fitness activity, the activity's duration in seconds, and the number of calories burned. You can trust clients to transmit only accurate data with all fields filled and sensible values included.</p><p>The <code class="language-json">GET /api/tracker</code> has to retrieve all available fitness data as a JSON array, which should be sorted by upload order, displaying the most recent records first.</p><p>This will lay a solid groundwork for future API expansion.</p><p>All data must be stored in the H2 database on disk. Ensure to add these lines to the <code class="language-json">application.properties</code> file:</p><pre><code class="language-no-highlight">spring.datasource.url=jdbc:h2:file:../fitness_db
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=sa
+
+spring.jpa.hibernate.ddl-auto=update
+
+spring.h2.console.enabled=true
+spring.h2.console.settings.trace=false
+spring.h2.console.settings.web-allow-others=false</code></pre><h5 id="objectives">Objectives</h5><ul><li><p>Construct the <code class="language-json">POST /api/tracker</code> endpoint to accept fitness data in the following JSON format:</p><pre><code class="language-json">{
+  "username": &lt;string&gt;,
+  "activity": &lt;string&gt;,
+  "duration": &lt;integer&gt;,
+  "calories": &lt;integer&gt;
+}</code></pre><p>and respond with <code class="language-json">201 CREATED</code> as the status code. Clients are bound to send accurate data only.</p></li><li><p>Build the <code class="language-json">GET /api/tracker</code> endpoint that responds with a <code class="language-json">200 OK</code> status code and a response body that carries a JSON array. The array is to contain all existing fitness data, sorted by their upload order, positioned from newest to oldest:</p><pre><code class="language-json">[
+  {
+    "id": &lt;id&gt;,
+    "username": &lt;string&gt;,
+    "activity": &lt;string&gt;,
+    "duration": &lt;integer&gt;,
+    "calories": &lt;integer&gt;
+  },
+  {
+    "id": &lt;id&gt;,
+    "username": &lt;string&gt;,
+    "activity": &lt;string&gt;,
+    "duration": &lt;integer&gt;,
+    "calories": &lt;integer&gt;
+  },
+  ...
+]</code></pre></li></ul><h5 id="examples">Examples</h5><p><strong>Example 1.</strong> <em>POST request to the /api/tracker endpoint</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "username": "user-12",
+  "activity": "swimming",
+  "duration": 950,
+  "calories": 320
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><strong>Example 2.</strong> <em>Another POST request to the /api/tracker endpoint</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "username": "user-12",
+  "activity": "hiking",
+  "duration": 4800,
+  "calories": 740
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><strong>Example 3.</strong> <em>GET request to the /api/tracker endpoint</em>:</p><p><em>Response code</em>: <code class="language-json">200 OK</code></p><p><em>Response body</em>:</p><pre><code class="language-json">[
+  {
+    "username": "user-12",
+    "activity": "hiking",
+    "duration": 4800,
+    "calories": 740
+  },
+  {
+    "username": "user-12",
+    "activity": "swimming",
+    "duration": 950,
+    "calories": 320
+  }
+]</code></pre>
+</div>

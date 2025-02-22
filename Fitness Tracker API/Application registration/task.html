@@ -1,0 +1,53 @@
+<div class="step-text">
+<h5 id="description">Description</h5><p>Now that we've completed the developer registration flow, let's allow authenticated developers to sign their applications up with our service.</p><p>To sign an application up, a developer needs to specify its name and description. In return, our service assigns a unique API key to each application which will later be used to authenticate them.</p><p>This API key uniquely identifies the application it's assigned to. As the API key serves as an authentication mechanism, it should be tough to guess or predict. One way to approach this is generating a random string, sufficiently long. For instance, you can generate a random byte array and convert it into a hex string. If the key length is considerable, the likelihood of API keys clashing is very low.</p><p>You also need to make changes to the <code class="language-json">GET /api/developers/&lt;id&gt;</code> endpoint. Now, it should include an array of all applications listed according to the order they were registered in, with newer applications showing up first.</p><h5 id="objectives">Objectives</h5><ul><li><p>Add the <code class="language-json">POST /api/applications/register</code> endpoint. This will accept the following request body in JSON format:</p><pre><code class="language-json">{
+  "name": &lt;string, not null, not blank, unique&gt;,
+  "description": &lt;string, not null&gt;
+}</code></pre><p><code class="language-json">name</code> is the application's name and should be a unique non-blank string; <code class="language-json">description</code> is the application's description and can be empty or blank. If registration is successful, the endpoint should return a status code <code class="language-json">201 CREATED</code>, plus the response body below:</p><pre><code class="language-json">{
+  "name": &lt;string&gt;,
+  "apikey": &lt;string, not null, not blank, unique&gt;
+}</code></pre><p>The response should comprise the application's name and the assigned unique API key. If the request body contains an invalid field, the endpoint should respond with a status code <code class="language-json">400 BAD REQUEST</code>. If an unauthenticated developer sends the request, the endpoint should send a response with the status code <code class="language-json">401 UNAUTHORIZED</code>.</p></li><li><p>Update the <code class="language-json">GET /api/developers/&lt;id&gt;</code> endpoint. It should now include a JSON array of all applications of the requested developer, covering each application's id, name, description, and API key. Applications in the array should be arranged according to when they were registered, with newer applications listed first:</p><pre><code class="language-json">{
+  "id": &lt;id&gt;,
+  "email": &lt;string&gt;,
+  "applications": [
+    {
+      "id": &lt;id&gt;,
+      "name": &lt;string&gt;,
+      "description": &lt;string&gt;,
+      "apikey": &lt;string&gt;
+    },
+    {
+      "id": &lt;id&gt;,
+      "name": &lt;string&gt;,
+      "description": &lt;string&gt;,
+      "apikey": &lt;string&gt;
+    },
+    ...
+  ]
+}</code></pre></li><li><p>The access rules from the previous stage still apply.</p></li></ul><h5 id="examples">Examples</h5><p><strong>Example 1.</strong> <em>POST request to the /api/developers/signup endpoint</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "email": "johndoe@gmail.com",
+  "password": "qwerty"
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><em>Response header</em>:</p><pre><code class="language-no-highlight">Location: /api/developers/9062</code></pre><p><strong>Example 2.</strong> <em>POST request to the /api/applications/register endpoint with login=johndoe@gmail.com and password=qwerty</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "name": "Fitness App",
+  "description": "demo application"
+}</code></pre><p><em>Response code</em>: <code class="language-json">201 CREATED</code></p><p><em>Response body</em>:</p><pre><code class="language-json">{
+  "name": "Fitness App",
+  "apikey": "21da3cc8020517ecaf2e0781b9f679c56fe0f119"
+}</code></pre><p><strong>Example 3.</strong> <em>POST request to the /api/applications/register endpoint with login=johndoe@gmail.com and password=qwerty</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "name": "Fitness App",
+  "description": "demo application"
+}</code></pre><p><em>Response code</em>: <code class="language-json">400 BAD REQUEST</code></p><p><strong>Example 4.</strong> <em>POST request to the /api/applications/register endpoint with login=johndoe@gmail.com and password=qwerty</em>:</p><p><em>Request body</em>:</p><pre><code class="language-json">{
+  "name": "",
+  "description": "demo application"
+}</code></pre><p><em>Response code</em>: <code class="language-json">400 BAD REQUEST</code></p><p><strong>Example 5</strong>. <em>GET request to the /api/developers/9062 endpoint with login=johndoe@gmail.com and password=qwerty</em>:</p><p>Response code: <code class="language-json">200 OK</code></p><p>Response body:</p><pre><code class="language-json">{
+  "id": 9062,
+  "email": "johndoe@gmail.com",
+  "applications": [
+    {
+      "id": 4624,
+      "name": "Fitness App",
+      "description": "demo application",
+      "apikey": "21da3cc8020517ecaf2e0781b9f679c56fe0f119"
+    }
+  ]
+}</code></pre>
+</div>

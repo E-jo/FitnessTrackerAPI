@@ -1,0 +1,35 @@
+type: edu
+files:
+  - name: src/fitnesstracker/FitnessTrackerApplication.java
+    visible: true
+    learner_created: false
+  - name: src/resources/application.properties
+    visible: true
+    learner_created: false
+  - name: test/DataRecord.java
+    visible: false
+    learner_created: false
+  - name: test/FitnessTrackerTest.java
+    visible: false
+    learner_created: false
+  - name: build.gradle
+    visible: true
+    learner_created: false
+  - name: src/fitnesstracker/models/FitnessLog.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/repositories/FitnessLogRepository.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/services/FitnessLogService.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/controllers/FitnessLogController.java
+    visible: true
+    learner_created: true
+feedback_link: https://hyperskill.org/learn/step/38669#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Wed, 19 Feb 2025 14:35:58 UTC"
+record: 1
