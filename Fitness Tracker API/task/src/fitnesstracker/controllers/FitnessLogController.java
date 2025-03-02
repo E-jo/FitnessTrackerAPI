@@ -4,6 +4,7 @@ import fitnesstracker.models.*;
 import fitnesstracker.services.ApplicationService;
 import fitnesstracker.services.FitnessLogService;
 import fitnesstracker.services.UserService;
+import fitnesstracker.services.TokenBucketService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger.*;
+import java.time.LocalDateTime;
+
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -30,6 +36,9 @@ public class FitnessLogController {
     ApplicationService applicationService;
 
     @Autowired
+    TokenBucketService tokenBucketService;
+
+    @Autowired
     PasswordEncoder encoder;
 
     @GetMapping("/api/tracker")
@@ -44,7 +53,7 @@ public class FitnessLogController {
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             System.out.println(headerName);
-            if (headerName.equals("X-API-Key")) {
+            if (headerName.equalsIgnoreCase("x-api-key")) {
                 String key = request.getHeader(headerName);
                 System.out.println("Found X-API-Key header with key: " + key);
                 Optional<Application> optionalApplication = applicationService.findByApiKey(key);
@@ -59,6 +68,34 @@ public class FitnessLogController {
         if (!validHeader) {
             System.out.println("Invalid/no API key found in header X-API-Key");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        System.out.println("Requesting app: " + application.getName());
+        tokenBucketService.getTokenBuckets().forEach((appName, tokens) -> {
+            System.out.println("App: " + appName + ": " + tokens);
+        });
+
+        try {
+            System.out.println("Attempting to retrieve tokens from " + application.getName());
+            String category = application.getCategory();
+            System.out.println(application.getName() + " category: " + category);
+
+            boolean valid = category.equalsIgnoreCase("premium") ? true : tokenBucketService.grantAccess(application.getName());
+
+            int tokens = tokenBucketService.getTokenBuckets().get(application.getName()).getTokens().intValue();
+            System.out.println(application.getName() + " has " + tokens + " tokens remaining");
+
+            System.out.println("Return value of grantAccess for " + application.getName() +
+                    ": " + valid);
+
+            if (!valid) {
+                System.out.println("Access denied");
+                System.out.println(application.getName() + " has " + tokens + " tokens");
+                return new ResponseEntity<>(HttpStatus.TOO_MANY_REQUESTS);
+            }
+        } catch (Exception e) {
+            System.out.println("Caught: " + e.getMessage());
+            // pass
         }
 
         return new ResponseEntity<>(fitnessLogService.findAllByOrderByCreatedAtDesc(),
@@ -77,7 +114,8 @@ public class FitnessLogController {
 
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
-            if (headerName.equals("X-API-Key")) {
+            System.out.println("Header name: " + headerName);
+            if (headerName.equalsIgnoreCase("x-api-key")) {
                 String key = request.getHeader(headerName);
                 System.out.println("Found X-API-Key header with key: " + key);
                 Optional<Application> optionalApplication = applicationService.findByApiKey(key);
@@ -90,6 +128,7 @@ public class FitnessLogController {
         }
 
         if (!validHeader) {
+            System.out.println("No valid header API key found");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -153,6 +192,8 @@ public class FitnessLogController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        System.out.println("Category: " + applicationSubmission.category());
+
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom random = new SecureRandom();
         StringBuilder apiKeySb = new StringBuilder();
@@ -180,18 +221,24 @@ public class FitnessLogController {
         User user = userOptional.get();
 
         Application application = new Application(applicationSubmission.name(),
-                applicationSubmission.description(), apiKey, user);
+                applicationSubmission.description(), apiKey, user, applicationSubmission.category());
 
         application.setUser(user);
 
         Application savedApplication = applicationService.save(application);
 
+        String appName = application.getName();
+
+        tokenBucketService.getTokenBuckets().putIfAbsent(appName, new TokenBucket(appName,
+                new AtomicInteger(1), LocalDateTime.now(), new AtomicBoolean(true)));
+
+        System.out.println("Current tokens for " + appName + ": " +
+                tokenBucketService.getTokenBuckets().get(application.getName()));
+
         user.getApplications().add(savedApplication);
 
         return new ResponseEntity<>(new SubmissionResponse(savedApplication.getName(),
-                savedApplication.getApiKey()), HttpStatus.CREATED);
+                savedApplication.getApiKey(), applicationSubmission.category()), HttpStatus.CREATED);
     }
-
-
 }
 

@@ -5,5 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record ApplicationSubmission (@Expose @NotNull @NotBlank String name,
-                                     @Expose @NotNull String description){
+                                     @Expose @NotNull String description,
+                                     @Expose String category){
 }

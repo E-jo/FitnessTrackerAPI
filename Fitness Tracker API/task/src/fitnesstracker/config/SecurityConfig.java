@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Order(1)
 public class SecurityConfig {
     public SecurityConfig() {
-        System.out.println("SecurityConfig is active");
+        System.out.println("SecurityConfig initialized");
     }
     @Bean(name = "applicationSecurityFilterChain")
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,3 +48,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(13);
     }
 }
+

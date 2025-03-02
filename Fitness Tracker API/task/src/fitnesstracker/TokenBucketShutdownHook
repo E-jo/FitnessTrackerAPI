@@ -1,0 +1,17 @@
+package fitnesstracker;
+
+@Component
+public class TokenBucketShutdownHook {
+    private final TokenBucketRepository tokenBucketRepository;
+    private final Map<String, TokenBucket> tokenBuckets;
+
+    public TokenBucketShutdownHook(TokenBucketRepository tokenBucketRepository, Map<String, TokenBucket> tokenBuckets) {
+        this.tokenBucketRepository = tokenBucketRepository;
+        this.tokenBuckets = tokenBuckets;
+    }
+
+    @PreDestroy
+    public void persistBuckets() {
+        tokenBucketRepository.saveAll(tokenBuckets.values());
+    }
+}

@@ -2,5 +2,7 @@ package fitnesstracker.models;
 
 import com.google.gson.annotations.Expose;
 
-public record SubmissionResponse (@Expose String name, @Expose String apikey){
+public record SubmissionResponse (@Expose String name,
+                                  @Expose String apikey,
+                                  @Expose String category){
 }

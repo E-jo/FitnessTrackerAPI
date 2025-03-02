@@ -78,18 +78,22 @@ files:
   - name: src/fitnesstracker/models/Application.java
     visible: true
     learner_created: true
+  - name: src/fitnesstracker/services/TokenBucketService.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/models/TokenBucket.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/repositories/TokenBucketRepository.java
+    visible: true
+    learner_created: true
+  - name: src/fitnesstracker/TokenBucketShutdownHook
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/38673#comment
-status: Failed
+status: Solved
 feedback:
-  message: |-
-    Wrong answer in test #9
-
-    The JSON object should contain a key &quot;category&quot;
-
-    Full JSON:
-    {
-      &quot;name&quot;: &quot;Demo App 1&quot;,
-      &quot;apikey&quot;: &quot;nXB74JHARL0jyu6c9a10&quot;
-    }
-  time: "Sat, 22 Feb 2025 01:36:26 UTC"
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Fri, 28 Feb 2025 14:39:40 UTC"
 record: 1

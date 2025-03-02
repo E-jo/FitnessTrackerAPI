@@ -36,15 +36,21 @@ public class Application {
     @Expose(serialize = false)
     String createdAt;
 
+    @Expose
+    String category;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @Expose(serialize = false)
     private User user;
 
-    public Application(String name, String description, String apiKey, User user) {
+    public Application(String name, String description, String apiKey, User user, String category) {
         this.name = name;
         this.description = description;
         this.apiKey = apiKey;
         this.createdAt = LocalDateTime.now().toString();
+        this.user = user;
+        this.category = category;
     }
 
     @Override

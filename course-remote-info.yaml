@@ -3,7 +3,7 @@ hyperskill_project:
   ide_files: https://cogniterra.org/media/attachments/lesson/33833/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: "Fri, 21 Feb 2025 23:00:19 UTC"
+update_date: "Sun, 02 Mar 2025 14:00:13 UTC"
 stages:
   - id: 2390
     step: 38669
@@ -19,7 +19,7 @@ stages:
     is_completed: true
   - id: 2394
     step: 38673
-    is_completed: false
+    is_completed: true
 topics:
   0:
     - title: Data structures
